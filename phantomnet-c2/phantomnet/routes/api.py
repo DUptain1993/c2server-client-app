@@ -20,6 +20,15 @@ api_bp = Blueprint('api', __name__)
 # Global server instance (would be injected in production)
 server = PhantomC2Server()
 
+@api_bp.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint for Cloud Run"""
+    return jsonify({
+        'status': 'healthy',
+        'service': 'phantomnet-c2',
+        'version': '1.0.0'
+    }), 200
+
 @api_bp.route('/admin/commands', methods=['POST'])
 def send_command():
     """Send command to bot"""

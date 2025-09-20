@@ -143,8 +143,8 @@ export const API_ENDPOINTS = {
 } as const;
 
 export const SERVER_CONFIG = {
-  DEFAULT_URL: 'https://localhost',
-  DEFAULT_PORT: 8443,
+  DEFAULT_URL: 'https://phantomnet-c2-22335118220.us-central1.run.app',
+  DEFAULT_PORT: 443, // Cloud Run uses standard HTTPS port
   TIMEOUT: 30000, // 30 seconds
   RETRY_ATTEMPTS: 3,
   RETRY_DELAY: 1000, // 1 second

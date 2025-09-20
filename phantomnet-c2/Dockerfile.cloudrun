@@ -39,30 +39,29 @@ WORKDIR /app
 COPY --chown=phantomnet:phantomnet . .
 
 # Create necessary directories with proper permissions
-RUN mkdir -p /app/logs /app/data /certs && \
-    chown -R phantomnet:phantomnet /app /certs
+RUN mkdir -p /app/logs /app/data && \
+    chown -R phantomnet:phantomnet /app
 
 # Make entrypoint executable
-RUN chmod +x entrypoint.sh
+RUN chmod +x entrypoint-cloudrun.sh
 
-# Set environment variables
+# Set environment variables for Cloud Run
 ENV PYTHONPATH=/app \
     PYTHONUNBUFFERED=1 \
-    SSL_CERT_PATH=/certs/fullchain.pem \
-    SSL_KEY_PATH=/certs/privkey.pem \
     DATABASE_URL=sqlite:////app/data/phantom_c2.db \
-    LOG_FILE=/app/logs/phantom.log
+    LOG_FILE=/app/logs/phantom.log \
+    FLASK_ENV=production \
+    DEBUG=false
 
-# Expose port 8443 for HTTPS
-EXPOSE 8443
+# Cloud Run automatically sets PORT environment variable
+EXPOSE $PORT
 
-# Add health check
+# Add health check for HTTP
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD curl -k -f https://localhost:8443/health || exit 1
+    CMD curl -f http://localhost:$PORT/health || exit 1
 
 # Switch to non-root user
 USER phantomnet
 
-# Run entrypoint script
-ENTRYPOINT ["./entrypoint.sh"]
-
+# Run Cloud Run compatible entrypoint script
+ENTRYPOINT ["./entrypoint-cloudrun.sh"]

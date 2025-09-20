@@ -20,7 +20,18 @@ class Config:
     SQLALCHEMY_ENGINE_OPTIONS = {
         'pool_pre_ping': True,
         'pool_recycle': 300,
+        'pool_timeout': 20,
+        'max_overflow': 0,
     }
+    
+    # Cloud SQL specific configuration
+    if 'cloudsql' in SQLALCHEMY_DATABASE_URI:
+        SQLALCHEMY_ENGINE_OPTIONS.update({
+            'pool_size': 5,
+            'max_overflow': 2,
+            'pool_timeout': 30,
+            'pool_recycle': 1800,
+        })
 
     # Server configuration
     HOST = os.getenv('HOST', '0.0.0.0')
@@ -106,3 +117,7 @@ config = {
     'testing': TestingConfig,
     'default': DevelopmentConfig
 }
+
+def get_config(config_name=None):
+    """Get configuration class by name"""
+    return config.get(config_name or 'default', config['default'])

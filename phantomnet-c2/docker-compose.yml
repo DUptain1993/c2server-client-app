@@ -1,14 +1,62 @@
-version: '3.8'
-
 services:
   phantomnet:
-    build: .
-    image: mrfkry93/phantomnet-c2:v1.3
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: phantomnet-c2:latest
+    container_name: phantomnet-c2
     ports:
       - "8443:8443"
     volumes:
-      - /home/ubuntu/certs:/certs:ro
+      - ./certs:/certs:ro
+      - phantomnet_data:/app/data
+      - phantomnet_logs:/app/logs
     environment:
-      SSL_CERT_PATH: /certs/fullchain.pem
-      SSL_KEY_PATH: /certs/privkey.pem
+      - FLASK_ENV=production
+      - DEBUG=false
+      - SSL_CERT_PATH=/certs/fullchain.pem
+      - SSL_KEY_PATH=/certs/privkey.pem
+      - DATABASE_URL=sqlite:////app/data/phantom_c2.db
+      - LOG_FILE=/app/logs/phantom.log
+      - LOG_LEVEL=INFO
+      - HOST=0.0.0.0
+      - PORT=8443
+      - SESSION_TIMEOUT=86400
+      - RATE_LIMIT_ENABLED=true
+      - MAX_LOGIN_ATTEMPTS=5
+      - LOCKOUT_DURATION=900
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:noexec,nosuid,size=100m
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    healthcheck:
+      test: ["CMD", "curl", "-k", "-f", "https://localhost:8443/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - phantomnet_network
+
+networks:
+  phantomnet_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  phantomnet_data:
+    driver: local
+  phantomnet_logs:
+    driver: local
