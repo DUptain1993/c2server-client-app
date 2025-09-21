@@ -60,7 +60,7 @@ class Config:
     OTX_API_KEY = os.getenv('OTX_API_KEY', '')
 
     # C2 Server configuration
-    C2_SERVER_IP = os.getenv('C2_SERVER_IP', '127.0.0.1')
+    C2_SERVER_IP = os.getenv('C2_SERVER_IP', '0.0.0.0')
     C2_SERVER_PORT = os.getenv('C2_SERVER_PORT', '8443')
 
     # DuckDNS configuration
@@ -73,7 +73,7 @@ class Config:
     DATA_RETENTION_DAYS = int(os.getenv('DATA_RETENTION_DAYS', 30))
 
     # Payload generation
-    MSFVENOM_PATH = os.getenv('MSFVENOM_PATH', '/usr/bin/msfvenom')
+    MSFVENOM_PATH = os.getenv('MSFVENOM_PATH', '/opt/metasploit-framework/bin/msfvenom')
 
     # Security settings
     MAX_LOGIN_ATTEMPTS = int(os.getenv('MAX_LOGIN_ATTEMPTS', 5))

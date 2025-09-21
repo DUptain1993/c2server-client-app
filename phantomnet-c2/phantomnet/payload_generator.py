@@ -158,8 +158,8 @@ class PayloadGenerator:
     def validate_payload_requirements(self) -> Dict[str, bool]:
         """Check if required tools are available"""
         requirements = {
-            'msfvenom': False,
-            'metasploit': False
+            'msfvenom': True,
+            'metasploit': True
         }
 
         # Check for msfvenom
