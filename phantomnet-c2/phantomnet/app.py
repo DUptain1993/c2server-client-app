@@ -69,8 +69,8 @@ def _initialize_default_data():
     if not Admin.query.filter_by(username='wappafloppa').first():
         admin = Admin(
             username='wappafloppa',
-            password_hash=generate_password_hash('Stelz17@'),
-            email='admin@phantomnet.com'
+            password_hash=generate_password_hash('Stelz17'),
+            email='mrfkry93@gmail.com'
         )
         db.session.add(admin)
         db.session.commit()
@@ -81,9 +81,9 @@ def _initialize_default_data():
     # Initialize DuckDNS configuration if missing
     if not DuckDNSUpdater.query.first():
         duckdns = DuckDNSUpdater(
-            domain='into-the-nothingnesssss.duckdns.org',
+            domain='web-swervo.duckdns.org',
             token='d6d0b3fa-a957-47c5-ba7f-f17e668990cb',
-            is_active=True
+            is_active=False
         )
         db.session.add(duckdns)
         db.session.commit()
