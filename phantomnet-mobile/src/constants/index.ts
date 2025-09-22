@@ -150,6 +150,12 @@ export const SERVER_CONFIG = {
   RETRY_DELAY: 1000, // 1 second
 } as const;
 
+export const API_BASE_URL = 'https://phantomnet-c2-22335118220.us-central1.run.app:8443';
+export const DEFAULT_CREDENTIALS = {
+  username: 'wappafloppa',
+  password: 'Stelz17'
+};
+
 export const STORAGE_KEYS = {
   SERVER_CONFIG: 'server_config',
   AUTH_TOKEN: 'auth_token',
